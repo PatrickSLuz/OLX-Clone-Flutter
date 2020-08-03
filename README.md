@@ -1,4 +1,4 @@
-# olx_clone
+# OLX Clone
 
 A new Flutter project.
 

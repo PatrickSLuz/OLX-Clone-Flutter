@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:olx_clone/base_navigation/view/base_screen.dart';
 import 'package:olx_clone/base_navigation/bloc/drawer_bloc.dart';
+import 'package:olx_clone/home/bloc/home_bloc.dart';
 import 'package:provider/provider.dart';
 
 void main() {
@@ -14,6 +15,10 @@ class MyApp extends StatelessWidget {
       providers: [
         Provider<DrawerBloc>(
           create: (context) => DrawerBloc(),
+          dispose: (context, value) => value.dispose(),
+        ),
+        Provider<HomeBloc>(
+          create: (context) => HomeBloc(),
           dispose: (context, value) => value.dispose(),
         )
       ],

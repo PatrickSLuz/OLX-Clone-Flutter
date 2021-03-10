@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:olx_clone/login/bloc/login_bloc.dart';
+import 'package:olx_clone/login/model/field_state.dart';
 
 class LoginScreen extends StatefulWidget {
   @override
@@ -6,6 +8,8 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+  final _loginBloc = LoginBloc();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -41,13 +45,18 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                 ),
               ),
-              StreamBuilder(
+              StreamBuilder<FieldState>(
+                stream: _loginBloc.outEmail,
+                initialData: FieldState(),
                 builder: (context, snapshot) {
                   return TextField(
                     keyboardType: TextInputType.emailAddress,
                     autocorrect: false,
-                    decoration: const InputDecoration(
+                    enabled: snapshot.data.enabled,
+                    onChanged: _loginBloc.changeEmail,
+                    decoration: InputDecoration(
                       border: const OutlineInputBorder(),
+                      errorText: snapshot.data.error,
                     ),
                   );
                 },
@@ -84,13 +93,18 @@ class _LoginScreenState extends State<LoginScreen> {
                   ],
                 ),
               ),
-              StreamBuilder(
+              StreamBuilder<FieldState>(
+                stream: _loginBloc.outPassword,
+                initialData: FieldState(),
                 builder: (context, snapshot) {
                   return TextField(
                     obscureText: true,
                     autocorrect: false,
-                    decoration: const InputDecoration(
+                    enabled: snapshot.data.enabled,
+                    onChanged: _loginBloc.changePassword,
+                    decoration: InputDecoration(
                       border: const OutlineInputBorder(),
+                      errorText: snapshot.data.error,
                     ),
                   );
                 },

@@ -12,11 +12,19 @@ class FilterScreen extends StatefulWidget {
 
 class _FilterScreenState extends State<FilterScreen> {
   final _formKey = GlobalKey<FormState>();
+  final _scaffoldKey = GlobalKey<ScaffoldState>();
   final _scrollController = ScrollController();
+
+  Filter _filter = Filter(
+    maxPrice: 1000,
+    minPrice: 500,
+    orderBy: OrderBy.PRICE,
+  );
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scaffoldKey,
       appBar: AppBar(
         title: const Text("Filtar Busca"),
       ),
@@ -30,23 +38,42 @@ class _FilterScreenState extends State<FilterScreen> {
               children: <Widget>[
                 _buildLabel("Ordenar por"),
                 OrderByField(
-                  initialValue: OrderBy.DATE,
-                  onSaved: (value) {},
+                  initialValue: _filter.orderBy,
+                  onSaved: (value) => _filter.orderBy = value,
                 ),
                 _buildLabel("Preço R\$"),
-                PriceRangeField(),
+                PriceRangeField(
+                  filter: _filter,
+                ),
                 _buildLabel("Tipo de anunciante"),
                 VendorTypeField(
-                  initialValue:
-                      VENDOR_TYPE_PARTICULAR | VENDOR_TYPE_PROFESSIONAL,
-                  onSaved: (newValue) {},
+                  initialValue: _filter.vendorType,
+                  onSaved: (value) => _filter.vendorType = value,
                 ),
               ],
             ),
           ),
           AnimatedButton(
             scrollController: _scrollController,
-            onTap: () {},
+            onTap: () {
+              if (_formKey.currentState.validate()) {
+                _formKey.currentState.save();
+
+                if (_filter.maxPrice != null && _filter.minPrice != null) {
+                  if (_filter.minPrice > _filter.maxPrice) {
+                    _scaffoldKey.currentState.showSnackBar(
+                      SnackBar(
+                        backgroundColor: Colors.pink,
+                        content: const Text("Faixa de preço inválida"),
+                      ),
+                    );
+                    return;
+                  }
+                }
+
+                // TODO, SALVAR E PESQUISAR
+              }
+            },
           )
         ],
       ),
